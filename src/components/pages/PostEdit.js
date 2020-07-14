@@ -1,31 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import client from '../../utils/client';
 import { Container, Box } from '@material-ui/core';
 import history from '../../history';
 import Alert from '../../utils/alert';
-import Spinner from '../common/Spinner';
-import { SET_ERRORS, CLEAR_ERRORS } from '../../actions/types';
 import PostEditForm from '../posts/PostEditForm';
 import MultipleImageEditor from '../common/MultipleImageEditor';
 import { POST_PHOTO_LIMIT, POST_PHOTO_SIZE } from '../../constants/posts';
+import { setLoading } from '../../actions/commonActions';
+import { getPostDetails, updatePost } from '../../api/post';
+import { useUpdateApiForm } from '../../hooks/useUpdateApiForm';
 
 const PostEdit = (props) => {
     const id = props.match.params.id;
     const dispatch = useDispatch();
     const currentUser = useSelector(state => state.auth.user);
-    const [loading, setLoading] = useState(false);
     const [postDetails, setDetails] = useState(null);
+    const [submitFormData] = useUpdateApiForm();
 
     useEffect(() => {
-        if (!id) {
-            console.log("ID must be set");
-            history.push('/');
-            return;
-        }
-
-        setLoading(true);
-        client.get('/posts/' + id)
+        dispatch(setLoading(true));
+        getPostDetails(id)
             .then(res => {
                 let postData = res.data.data;
 
@@ -42,59 +36,21 @@ const PostEdit = (props) => {
                 console.log(error);
             })
             .finally(() => {
-                setLoading(false);
+                dispatch(setLoading(false));
             })
 
-    }, [id, currentUser.id])
+    }, [id, dispatch, currentUser.id])
 
     const handleSubmit = async submitedData => {
-        console.log(submitedData);
-
-        setLoading(true);
-
-        let fd = new FormData();
-
-        fd.append('_method', 'PATCH');
-        for (var dataKey in submitedData) {
-            let data = submitedData[dataKey];
-            switch (dataKey) {
-                default:
-                    fd.append(dataKey, data ? data : '');
-            }
-        }
-
-        try {
-            let url = `/posts/${id}`;
-            await client.post(url, fd);
+        let result = await submitFormData(id, submitedData, updatePost);
+        if (result) {
             Alert.success("更新しました");
-            setLoading(false);
-            dispatch({
-                type: CLEAR_ERRORS,
-            })
         }
-        catch (error) {
-            let formErrors = error.response.data.errors;
-            if (formErrors) {
-                // console.log(formErrors);
-                dispatch({
-                    type: SET_ERRORS,
-                    payload: formErrors
-                })
-            }
-            setLoading(false);
-            return;
-        }
-
-        //history.push('/post');
     }
 
 
     return (
         <Container style={{ minHeight: '80vh' }}>
-            {
-                loading ? <Spinner cover={true} /> : null
-            }
-
             <h1>友達募集　編集</h1>
             <Box>
                 <h2>画像編集</h2>

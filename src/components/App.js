@@ -35,6 +35,7 @@ import ScrollToTop from './ScrollToTop';
 import GroupPost from './pages/GroupPost/GroupPost';
 import GroupPostCreate from './pages/GroupPostCreate';
 import GroupPostEdit from './pages/GroupPostEdit';
+import ModalMessage from './common/ModalMessage';
 
 const theme = createMuiTheme({
     typography: {
@@ -101,6 +102,7 @@ const theme = createMuiTheme({
 const App = () => {
     const dispatch = useDispatch();
     const loading = useSelector(state => state.common.loading);
+    const modalMessage = useSelector(state => state.common.modalMessage);
 
     useEffect(() => {
         dispatch(getAreaList());
@@ -109,13 +111,19 @@ const App = () => {
         dispatch(getCurrentUser());
     }, [dispatch])
 
+    const Loading = () => {
+        return loading ? <Spinner fixed={true} /> : null;
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
             <Router history={history}>
-                {
-                    loading ? <Spinner fixed={true} /> : null
-                }
+                <Loading />
+                <ModalMessage
+                    open={modalMessage !== null}
+                    message={modalMessage}
+                />
                 <Hidden xsDown>
                     <TopBar />
                 </Hidden>
@@ -126,13 +134,13 @@ const App = () => {
                     <Route path="/login" exact component={Login} />
                     <PrivateRoute path="/mypage/account" exact component={MyAccount} />
                     <PrivateRoute path="/mypage/post" exact component={MyPost} />
+                    <PrivateRoute path="/mypage/post/create" exact component={PostCreate} />
+                    <PrivateRoute path="/mypage/post/edit/:id" exact component={PostEdit} />
                     <Route path="/post" exact component={Post} />
-                    <PrivateRoute path="/post/edit/:id" exact component={PostEdit} />
-                    <PrivateRoute path="/post/edit" exact component={PostCreate} />
                     <Route path="/post/:id" exact component={PostDetails} />
                     <Route path="/group" exact component={Group} />
                     <PrivateRoute path="/mypage/group" exact component={MyGroup} />
-                    <PrivateRoute path="/mypage/group/edit" exact component={GroupCreate} />
+                    <PrivateRoute path="/mypage/group/create" exact component={GroupCreate} />
                     <PrivateRoute path="/mypage/group/:slug" exact component={ManageGroup} />
                     <PrivateRoute path="/mypage/group/:slug/editpost/:id" exact component={GroupPostEdit} />
                     <PrivateRoute path="/mypage/group/:slug/addpost" exact component={GroupPostCreate} />

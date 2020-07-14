@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Box } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux';
-import { deletePost } from '../../actions/userActions';
+import { deletePost, getMyPosts } from '../../actions/userActions';
 import Alert from '../../utils/alert';
 import MyPostCard from './MyPost/MyPostCard';
 
 const MyPost = () => {
     const myPosts = useSelector(state => state.user.myPosts);
+    const currentUser = useSelector(state => state.auth.user);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (currentUser) {
+            dispatch(getMyPosts(currentUser.id));
+        }
+    }, [dispatch, currentUser])
 
     const handleDelete = (postId) => {
         Alert.confirm("この投稿を削除しますか？")

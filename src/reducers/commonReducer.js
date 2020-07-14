@@ -1,7 +1,14 @@
-import { SET_AREA_LIST, SET_POST_CATEGORIES, SET_GROUP_CATEGORIES, SET_LOADING } from "../actions/types";
+import {
+    SET_AREA_LIST,
+    SET_POST_CATEGORIES,
+    SET_GROUP_CATEGORIES,
+    SET_MODAL_MESSAGE,
+    SET_LOADING
+} from "../actions/types";
 
 const INITIAL_STATE = {
     loading: false,
+    modalMessage: null,
     areaList: [],
     postCategories: [],
     groupCategories: [],
@@ -13,6 +20,11 @@ export default (state = INITIAL_STATE, action) => {
             return {
                 ...state,
                 loading: action.payload
+            }
+        case SET_MODAL_MESSAGE:
+            return {
+                ...state,
+                modalMessage: action.payload
             }
         case SET_AREA_LIST:
             return {

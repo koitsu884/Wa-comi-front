@@ -51,7 +51,7 @@ const Post = () => {
     }
 
     const handleAddButtonClick = () => {
-        history.push('/post/edit');
+        history.push('/mypage/post/create');
     }
 
     return (

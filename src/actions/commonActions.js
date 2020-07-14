@@ -1,4 +1,4 @@
-import { SET_LOADING, SET_AREA_LIST, SET_POST_CATEGORIES, SET_GROUP_CATEGORIES } from "./types";
+import { SET_LOADING, SET_AREA_LIST, SET_POST_CATEGORIES, SET_GROUP_CATEGORIES, SET_MODAL_MESSAGE } from "./types";
 import axios from 'axios';
 const apiBaseURL = process.env.REACT_APP_API_ROOT;
 
@@ -6,6 +6,13 @@ export const setLoading = (flag) => dispatch => {
     dispatch({
         type: SET_LOADING,
         payload: flag
+    });
+}
+
+export const setModalMessage = (message) => dispatch => {
+    dispatch({
+        type: SET_MODAL_MESSAGE,
+        payload: message
     });
 }
 

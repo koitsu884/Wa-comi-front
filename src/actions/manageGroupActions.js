@@ -83,20 +83,12 @@ export const getGroupRelatingData = (slug) => dispatch => {
         .finally(() => dispatch(setLoading(false)))
 }
 
-
 export const getGroupPosts = (slug) => dispatch => {
-    //TODO 
-    // client.get(`/groups/${slug}/posts`)
-    //     .then(res => {
-    //         dispatch(setManageGroupSupportMembers(res.data.data));
-    //     })
-    //     .catch(error => {
-    //         console.log(error);
-    //         dispatch(setManageGroupHasErrors(true));
-    //     })
-    //     .finally(() => {
-    //         dispatch(setLoading(false));
-    //     })
+    api.getGroupPosts(slug)
+        .then(res => {
+            dispatch(setManageGroupPosts(res.data.data));
+        })
+        .catch(error => console.log(error))
 }
 
 export const getGroupInvitations = slug => dispatch => {

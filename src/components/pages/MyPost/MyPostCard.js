@@ -30,7 +30,7 @@ const MyPostCard = ({
     }
 
     const handleEditClick = () => {
-        history.push('/post/edit/' + post.id);
+        history.push('/mypage/post/edit/' + post.id);
     }
     const handleDeleteClick = () => {
         onDelete();

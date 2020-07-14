@@ -1,16 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Container, Box } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteGroup } from '../../actions/userActions';
+import { deleteGroup, getMyGroups } from '../../actions/userActions';
 import Alert from '../../utils/alert';
 import MyGroupCard from './MyGroup/MyGroupCard';
 import SupportGroupCard from './MyGroup/SupportGroupCard';
 
 const MyGroup = () => {
+    const currentUser = useSelector(state => state.auth.user);
     const myGroups = useSelector(state => state.user.myGroups);
     const supportGroups = useSelector(state => state.user.supportGroups);
     const followGroups = useSelector(state => state.user.followGroups);
     const dispatch = useDispatch();
+
+    useEffect(() => {
+        if (currentUser) {
+            dispatch(getMyGroups(currentUser.id));
+        }
+    }, [dispatch, currentUser])
 
     const handleDelete = (slug) => {
         Alert.confirm("このグループを削除しますか？")

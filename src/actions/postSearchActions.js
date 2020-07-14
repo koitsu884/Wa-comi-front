@@ -40,13 +40,11 @@ export const searchPosts = (pageSize, page = 1, areaId = null, categories = []) 
     });
 
     let url = `${apiBaseURL}/posts?page=${page}&per_page=${pageSize}&` + params.join('&');
-    console.log(url)
 
     dispatch(setLoading(true));
 
     axios.get(url)
         .then(res => {
-            console.log(res.data);
             dispatch(setPostSearchResult(res.data.data, res.data.meta.current_page, res.data.links.next, res.data.meta.total));
         })
         .catch(error => {

@@ -49,7 +49,7 @@ const Group = () => {
     }
 
     const handleAddButtonClick = () => {
-        history.push('/group/edit');
+        history.push('/mypage/group/create');
     }
 
     return (
